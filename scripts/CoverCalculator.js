@@ -248,7 +248,7 @@ export class CoverCalculator {
 
   static async setCoverStatus(tokenId, type = COVER_TYPES.NONE ) {
     if (game.system.id === "pf2e") {
-      const actor = canvas.tokens.get(tokenId) => token.actor ?? []);
+      const actor = canvas.tokens.get(tokenId)?.actor ?? [];
       const ITEM_UUID = 'Compendium.pf2e.other-effects.I9lfZUiCwMiGogVi'; // Cover
       const source = (await fromUuid(ITEM_UUID)).toObject();
       source.flags.core ??= {};
