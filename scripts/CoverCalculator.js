@@ -247,10 +247,24 @@ export class CoverCalculator {
   }
 
   static async setCoverStatus(tokenId, type = COVER_TYPES.NONE ) {
-    if ( type === COVER_TYPES.NONE
-      || type === COVER_TYPES.TOTAL ) return CoverCalculator.disableAllCoverStatus(tokenId);
+    if (game.system.id === "pf2e") {
+      const actor = canvas.tokens.get(tokenId) => token.actor ?? []);
+      const ITEM_UUID = 'Compendium.pf2e.other-effects.I9lfZUiCwMiGogVi'; // Cover
+      const source = (await fromUuid(ITEM_UUID)).toObject();
+      source.flags.core ??= {};
+      source.flags.core.sourceId = ITEM_UUID;
+      const existing = actor.itemTypes.effect.find((effect) => effect.getFlag('core', 'sourceId') === ITEM_UUID);
+      if (existing) {
+        await existing.delete();
+      } else {
+        await actor.createEmbeddedDocuments('Item', [source]);
+      }
+    } else {
+      if ( type === COVER_TYPES.NONE
+        || type === COVER_TYPES.TOTAL ) return CoverCalculator.disableAllCoverStatus(tokenId);
 
-    return CoverCalculator.enableCoverStatus(tokenId, type);
+      return CoverCalculator.enableCoverStatus(tokenId, type);
+    }
   }
 
   /**
